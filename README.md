@@ -8,7 +8,9 @@ This small plugin enables you to publish (and update, to some extent) posts on w
 * Python support is required, check `echo has('python')` in vim
 * A few python packages, this shell command should do it:
 
-    pip install gdata Beautifulsoup4 lxml
+<pre>
+pip install gdata Beautifulsoup4 lxml
+</pre>
 
 # Installation, setup and usage
 
