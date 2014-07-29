@@ -48,31 +48,31 @@ Only two functions are provided:
 Now let’s try it, fire up vim and do `Bnew`, you will see something like
 this:
 
-    &lt;!-- ##################################
+    <!-- ##################################
             Title of your cool blog post
             (plain text)
-         ################################## --&gt;
-    &lt;posttitle&gt;
+         ################################## -->
+    <posttitle>
     sample title
-    &lt;/posttitle&gt;
+    </posttitle>
 
-    &lt;!-- ##################################
+    <!-- ##################################
             Content of your cool blog post
             (html format)
-         ################################## --&gt;
-    &lt;content&gt;
-    &lt;p&gt;
+         ################################## -->
+    <content>
+    <p>
     sample content
-    &lt;/p&gt;
-    &lt;/content&gt;
+    </p>
+    </content>
 
-    &lt;!-- ########################################################################
+    <!-- ########################################################################
             Labels, one per line, starts with @@, c-x c-k for autocompletion
-         ######################################################################## --&gt;
-    &lt;labels&gt;
+         ######################################################################## -->
+    <labels>
     @@sample_label1
     @@sample_label2
-    &lt;/labels&gt;
+    </labels>
 
 Just fill the title and content in, put your labels behind those @@
 signs and do `Bpost`, and you are done! For the content part, markdown
