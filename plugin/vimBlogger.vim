@@ -9,7 +9,7 @@ if os.path.exists(locallib) and locallib not in sys.path:
     sys.path.insert(0, locallib)
 
 from bs4 import BeautifulSoup
-# import vim
+import vim
 from tempfile import mkstemp
 from gdata.blogger.client import BloggerClient
 from markdown2 import markdown
@@ -77,7 +77,7 @@ posttemplate = """
         (plain text)
      ################################## -->
 <posttitle>
-aaa
+sample title
 </posttitle>
 
 <!-- ##################################
@@ -85,16 +85,17 @@ aaa
         (html format)
      ################################## -->
 <content>
-aaa
+<p>
+sample content
+</p>
 </content>
 
 <!-- ########################################################################
         Labels, one per line, starts with @@, c-x c-k for autocompletion
      ######################################################################## -->
 <labels>
-@@aa
-@@aa
-@@
+@@sample_label1
+@@sample_label2
 </labels>
 """
 ############# Templates ####################
