@@ -32,8 +32,11 @@ class PostBlogger(object):
 
             if not os.path.exists(self.dictfile):
                 self.labellist = []
-            with open(self.dictfile) as dictfh:
-                self.labellist = dictfh.read().split()
+                with open(self.dictfile, "w") as dictfh:
+                    dictfh.write("")
+            else:
+                with open(self.dictfile) as dictfh:
+                    self.labellist = dictfh.read().split()
 
             if not os.path.exists(self.dictfile_words):
                 with open(self.dictfile_words, "w") as wordsfh:
