@@ -16,12 +16,11 @@ from gdata.blogger.client import BloggerClient
 ############# PostBlogger class and instance ################
 
 class PostBlogger(object):
-    def __init__(self, rcfile=None):
-        if rcfile is None:
-            homedir = os.getenv("HOME")
-            self.rcfile = os.path.join(homedir, ".vimbloggerrc")
-        else:
-            self.rcfile = rcfile
+    def __init__(self):
+        homedir = os.getenv("HOME")
+        self.rcfile = os.path.join(homedir, ".vimbloggerrc")
+        self.dictfile = os.path.join(homedir, ".vimblogger_labels")
+        self.dictfile_words = os.path.join(homedir, ".vimblogger_words")
 
         try:
             if not os.path.exists(self.rcfile):
@@ -29,6 +28,15 @@ class PostBlogger(object):
             with open(self.rcfile) as rcfh:
                 rcinfo = rcfh.read()
                 self.gaccount, self.gpass, self.blogid = rcinfo.strip().split()
+
+            if not os.path.exists(self.dictfile):
+                self.labellist = []
+            with open(self.dictfile) as dictfh:
+                self.labellist = dictfh.read().split()
+
+            if not os.path.exists(self.dictfile_words):
+                with open(self.dictfile_words, "w") as wordsfh:
+                    wordsfh.write("")
 
         except Exception as e:
             sys.stderr.write(e.message + "\n")
@@ -38,7 +46,7 @@ class PostBlogger(object):
         self.posts_cache = {}
 
     def newpost(self):
-        fd, temppath = mkstemp()
+        fd, temppath = mkstemp(suffix="html")
         temppath = os.path.realpath(temppath)
         print("Created file " + temppath)
         # register new post in cache
@@ -62,25 +70,27 @@ blogger = PostBlogger()
 posttemplate = """
 <!-- ##################################
         Title of your cool blog post
+        (plain text)
      ################################## -->
 <posttitle>
-Sample title
+
 </posttitle>
 
 <!-- ##################################
         Content of your cool blog post
+        (html format)
      ################################## -->
 <content>
-<p>
-Sample paragraph
-</p>
+
 </content>
 
-<!-- ##################################
-        Labels, comma separated
-     ################################## -->
+<!-- ########################################################################
+        Labels, one per line, starts with @@, c-x c-k for autocompletion
+     ######################################################################## -->
 <labels>
-
+@@
+@@
+@@
 </labels>
 """
 ############# Templates ####################
@@ -91,7 +101,8 @@ function! Bnew()
 python <<EOF
 temppath = blogger.newpost()
 print(temppath)
-vim.command("e {} | setl ft=html".format(temppath))
+# open buffer, setup template
+vim.command("e {}".format(temppath))
 cb = vim.current.buffer
 cb[:] = posttemplate.split("\n")
 EOF
@@ -120,18 +131,25 @@ postlabels = postlabels.strip()
 if len(posttitle) == 0 or len(postcontent) == 0 or len(postlabels) == 0:
     raise Exception("Make sure title, content and labels are non-empty!")
 
-postlabels = postlabels.split(",")
+# processing labels
+postlabels = postlabels.split("@@")
 postlabels = [x.strip() for x in postlabels]
+postlabels = filter(bool, postlabels)
+extralabels = [x for x in postlabels if x not in blogger.labellist]
+self.labellist += extralabels
+with open(self.dictfile, "a") as labelfh:
+    labelfh.write("\n".join(extralabels))
 
+# if post object not registered with path, make a new post, otherwise update it
 if blogger.posts_cache[currentpath]["postobj"] is None:
     pobj = blogger.client.add_post(blog_id=blogger.blogid,
         title=posttitle, body=postcontent, labels=postlabels)
     blogger.posts_cache[currentpath]["postobj"] = pobj
     print("Post published and stored in cache.")
-    print("{} posts in cache.".format(len(blogger.posts_cache)))
+    print("{} post(s) in cache.".format(len(blogger.posts_cache)))
 else:
     pobj = blogger.posts_cache[currentpath]["postobj"]
-    if pobj.title.text != posttitle or pobj.content.text != postcontent:
+    if vim.eval("&modified") == "1":
         print("Post modified, I am going to updated it.")
         pobj.title.text = posttitle
         pobj.content.text = postcontent
@@ -143,6 +161,22 @@ else:
         print("Nothing changed, don't bother me.")
 EOF
 endfunction
+
+
+function! Bchecklabelhint()
+python <<EOF
+# if line starts with "@@", use labels dictionary for autocompletion
+# else use English words
+cl = vim.current.line
+if cl.startswith("@@"):
+    print("Autocomplete labels")
+    vim.command("setl dictionary=~/.vimblogger_labels")
+else:
+    print("Autocomplete words")
+    vim.command("setl dictionary=~/.vimblogger_words")
+EOF
+endfunction
+autocmd! CursorMoved,CursorMovedI <buffer> call Bchecklabelhint()
 
 
 command! -nargs=0  Bnew  call Bnew()
