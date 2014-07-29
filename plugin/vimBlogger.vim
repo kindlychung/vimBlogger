@@ -1,6 +1,7 @@
 python <<EOF
 
 import os
+import re
 import sys
 
 locallib = "/usr/local/lib/python2.7/site-packages"
@@ -90,7 +91,7 @@ function! Bnew()
 python <<EOF
 temppath = blogger.newpost()
 print(temppath)
-vim.command("e {}".format(temppath))
+vim.command("e {} | setl ft=html".format(temppath))
 cb = vim.current.buffer
 cb[:] = posttemplate.split("\n")
 EOF
