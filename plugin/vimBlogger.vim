@@ -46,9 +46,9 @@ class PostBlogger(object):
         self.posts_cache = {}
 
     def newpost(self):
-        fd, temppath = mkstemp(suffix="html")
+        fd, temppath = mkstemp(suffix=".vimBlogger.html")
         temppath = os.path.realpath(temppath)
-        print("Created file " + temppath)
+        # print("Created file " + temppath)
         # register new post in cache
         self.posts_cache[temppath] = {"fd": fd, "postobj": None}
         return temppath
@@ -100,9 +100,9 @@ EOF
 function! Bnew()
 python <<EOF
 temppath = blogger.newpost()
-print(temppath)
 # open buffer, setup template
 vim.command("e {}".format(temppath))
+vim.command("setl ft=html")
 cb = vim.current.buffer
 cb[:] = posttemplate.split("\n")
 EOF
@@ -136,9 +136,12 @@ postlabels = postlabels.split("@@")
 postlabels = [x.strip() for x in postlabels]
 postlabels = filter(bool, postlabels)
 extralabels = [x for x in postlabels if x not in blogger.labellist]
-self.labellist += extralabels
-with open(self.dictfile, "a") as labelfh:
-    labelfh.write("\n".join(extralabels))
+blogger.labellist += extralabels
+with open(blogger.dictfile, "a") as labelfh:
+    extralabel_string = "\n".join(extralabels)
+    print("New labels detected and added: ")
+    print(extralabel_string)
+    labelfh.write(extralabel_string)
 
 # if post object not registered with path, make a new post, otherwise update it
 if blogger.posts_cache[currentpath]["postobj"] is None:
@@ -169,15 +172,14 @@ python <<EOF
 # else use English words
 cl = vim.current.line
 if cl.startswith("@@"):
-    print("Autocomplete labels")
     vim.command("setl dictionary=~/.vimblogger_labels")
 else:
-    print("Autocomplete words")
     vim.command("setl dictionary=~/.vimblogger_words")
 EOF
 endfunction
-autocmd! CursorMoved,CursorMovedI <buffer> call Bchecklabelhint()
+autocmd! CursorMoved *.vimBlogger.html call Bchecklabelhint()
 
 
 command! -nargs=0  Bnew  call Bnew()
 command! -nargs=0  Bpost call Bpost()
+autocmd! BufWrite *.vimBlogger.html call Bpost()

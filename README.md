@@ -20,4 +20,4 @@ I have already used this plugin to post these info on my blog, you can see it th
 
 * Migrate to Blogger API v3
 * Use oauth instead of password
-* Autocomplete labels
+* Markdown support
