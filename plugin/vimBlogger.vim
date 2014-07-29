@@ -12,6 +12,7 @@ from bs4 import BeautifulSoup
 # import vim
 from tempfile import mkstemp
 from gdata.blogger.client import BloggerClient
+from markdown2 import markdown
 
 ############# PostBlogger class and instance ################
 
@@ -73,7 +74,7 @@ posttemplate = """
         (plain text)
      ################################## -->
 <posttitle>
-
+aaa
 </posttitle>
 
 <!-- ##################################
@@ -81,15 +82,15 @@ posttemplate = """
         (html format)
      ################################## -->
 <content>
-
+aaa
 </content>
 
 <!-- ########################################################################
         Labels, one per line, starts with @@, c-x c-k for autocompletion
      ######################################################################## -->
 <labels>
-@@
-@@
+@@aa
+@@aa
 @@
 </labels>
 """
@@ -121,12 +122,11 @@ if not currentpath in blogger.posts_cache:
 cb = vim.current.buffer[:]
 cbstring = "\n".join(cb)
 soup = BeautifulSoup(cbstring)
-posttitle = soup.posttitle.decode_contents()
-postcontent = soup.content.decode_contents()
-postlabels = soup.labels.decode_contents()
-posttitle = posttitle.strip()
-postcontent = postcontent.strip()
-postlabels = postlabels.strip()
+posttitle = soup.posttitle.decode_contents().strip()
+postcontent = soup.content.decode_contents().strip()
+postlabels = soup.labels.decode_contents().strip()
+postcontent = markdown(postcontent)
+print(postcontent)
 
 if len(posttitle) == 0 or len(postcontent) == 0 or len(postlabels) == 0:
     raise Exception("Make sure title, content and labels are non-empty!")
@@ -136,12 +136,15 @@ postlabels = postlabels.split("@@")
 postlabels = [x.strip() for x in postlabels]
 postlabels = filter(bool, postlabels)
 extralabels = [x for x in postlabels if x not in blogger.labellist]
-blogger.labellist += extralabels
-with open(blogger.dictfile, "a") as labelfh:
-    extralabel_string = "\n".join(extralabels)
-    print("New labels detected and added: ")
-    print(extralabel_string)
-    labelfh.write(extralabel_string)
+
+if len(extralabels) > 0:
+    blogger.labellist += extralabels
+    with open(blogger.dictfile, "a") as labelfh:
+        extralabel_string = "\n".join(extralabels)
+        print("New labels detected and added: ")
+        print(extralabel_string)
+        labelfh.write(extralabel_string)
+
 
 # if post object not registered with path, make a new post, otherwise update it
 if blogger.posts_cache[currentpath]["postobj"] is None:

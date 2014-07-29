@@ -1,3 +1,4 @@
+* Markdown support using python-markdown2
 * Added an `autocmd` for publishing post before writing file
 * Change dictionary file (c-x c-k autocompletion) based on start of current
 line, i.e. if line begins with @@, use ~/.vimblogger_labels, otherwise use
