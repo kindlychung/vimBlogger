@@ -2,6 +2,11 @@ python <<EOF
 
 import os
 import sys
+
+locallib = "/usr/local/lib/python2.7/site-packages"
+if os.path.exists(locallib) and locallib not in sys.path:
+    sys.path.insert(0, locallib)
+
 from bs4 import BeautifulSoup
 # import vim
 from tempfile import mkstemp
@@ -125,7 +130,6 @@ if blogger.posts_cache[currentpath]["postobj"] is None:
     print("{} posts in cache.".format(len(blogger.posts_cache)))
 else:
     pobj = blogger.posts_cache[currentpath]["postobj"]
-    print("pobj is the same as postobj?: ", str(pobj is blogger.posts_cache[currentpath]["postobj"]))
     if pobj.title.text != posttitle or pobj.content.text != postcontent:
         print("Post modified, I am going to updated it.")
         pobj.title.text = posttitle

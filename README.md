@@ -10,14 +10,6 @@ This small plugin enables you to publish (and update, to some extent) posts on w
 
     pip install gdata Beautifulsoup4 lxml
 
-# Usage
+# Installation, setup and usage
 
-Only two functions are provided:
-
-* `Bnew`: create a new post
-* `Bpost:` publish the current buffer as a post, or update it if it's already publilshed
-
-Well, I told you, it's simple stuff. :-)
-
-
-
+I have already used this plugin to post these info on my blog, you can see it there:  <a href="http://www.kaiyin.co.vu/2014/07/publish-to-blogger-right-from-inside-vim.html">Publish to blogger right from inside Vim! | Math notes and technical stuff</a>
