@@ -30,7 +30,7 @@ class PostBlogger(object):
                 raise Exception(self.rcfile + " does not exist!")
             with open(self.rcfile) as rcfh:
                 rcinfo = rcfh.read()
-                self.gaccount, self.gpass, self.blogid = rcinfo.strip().split()
+                self.gaccount, self.gpass, self.blogid = rcinfo.strip().split()[:3]
 
             if not os.path.exists(self.dictfile):
                 self.labellist = []
@@ -129,7 +129,7 @@ if not currentpath in blogger.posts_cache:
 # read and parse current buffer
 cb = vim.current.buffer[:]
 cbstring = "\n".join(cb)
-soup = BeautifulSoup(cbstring)
+soup = BeautifulSoup(cbstring, "html5lib")
 posttitle = soup.posttitle.decode_contents().strip()
 postcontent = soup.content.decode_contents().strip()
 postlabels = soup.labels.decode_contents().strip()

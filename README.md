@@ -10,7 +10,7 @@ This small plugin enables you to publish (and update, to some extent) posts on w
 * A few python packages, this shell command should do it:
 
 <pre>
-pip install gdata Beautifulsoup4 lxml markdown2
+pip install gdata Beautifulsoup4 lxml markdown2 html5lib
 </pre>
 
 
@@ -104,6 +104,8 @@ Well, I told you, it’s simple stuff. :-)
 
 # Change log
 
+* use html5lib as backend for BeautifulSoup
+* all line after 3rd is ignored in `.vimbloggerrc`
 * added newline before new label string
 * added `coding: utf8` line for python functions
 * use `import markdown2` instead `from markdown2 import markdown`
@@ -119,4 +121,4 @@ line, i.e. if line begins with @@, use ~/.vimblogger_labels, otherwise use
 
 # Test hints
 
-* use vim +Bnew +Bpost
+* use `vim +Bnew +Bpost`
