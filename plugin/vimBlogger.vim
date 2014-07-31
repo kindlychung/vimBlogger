@@ -194,4 +194,4 @@ autocmd! CursorMoved *.vimBlogger.html call Bchecklabelhint()
 
 command! -nargs=0  Bnew  call Bnew()
 command! -nargs=0  Bpost call Bpost()
-autocmd! BufWrite *.vimBlogger.html call Bpost()
+" autocmd! BufWrite *.vimBlogger.html call Bpost()

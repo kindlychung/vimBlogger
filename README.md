@@ -79,9 +79,6 @@ signs and do `Bpost`, and you are done! For the content part, markdown
 format is used. html can still be used, python-markdown2 will just
 ignore it (skip translation).
 
-And if you save the buffer, the plugin will publish the post for you
-automatically.
-
 Well, I told you, it’s simple stuff. :-)
 
 # Other configurations
@@ -104,6 +101,7 @@ Well, I told you, it’s simple stuff. :-)
 
 # Change log
 
+* stop auto publishing before saving
 * use html5lib as backend for BeautifulSoup
 * all line after 3rd is ignored in `.vimbloggerrc`
 * added newline before new label string
