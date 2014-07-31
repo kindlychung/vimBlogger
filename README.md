@@ -104,6 +104,9 @@ Well, I told you, it’s simple stuff. :-)
 
 # Change log
 
+* added newline before new label string
+* added `coding: utf8` line for python functions
+* use `import markdown2` instead `from markdown2 import markdown`
 * tested on a Ubuntu 14.04 machine
 * fixed template
 * touch ~/.vimblogger_labels if it does not exist
@@ -114,3 +117,6 @@ line, i.e. if line begins with @@, use ~/.vimblogger_labels, otherwise use
 ~/.vimblogger_words
 * Check ~/.vimblogger_words at startup, if non-existent, create an empty file with that name
 
+# Test hints
+
+* use vim +Bnew +Bpost
