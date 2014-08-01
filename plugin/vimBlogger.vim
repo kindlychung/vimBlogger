@@ -94,8 +94,8 @@ sample title
         Labels, one per line, starts with @@, c-x c-k for autocompletion
      ######################################################################## -->
 <labels>
-@@sample_label1
-@@sample_label2
+@@java
+@@c
 </labels>
 """
 ############# Templates ####################
